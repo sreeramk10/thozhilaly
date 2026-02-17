@@ -1,0 +1,28 @@
+textarea {
+    resize: none;
+    height: 250px;
+}
+
+a[href*="/media/"] {
+    display: none !important;
+}
+
+
+
+.ck.ck-editor__editable {
+    background-color: transparent !important;
+    /* color: aqua !important; */
+}
+
+.ck.ck-toolbar {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.ck.ck-toolbar .ck-toolbar__items {
+    background-color: transparent !important;
+}
+
+/* .ck-reset_all :not(.ck-reset_all-excluded *), .ck.ck-reset_all {
+    color: aqua !important;
+} */

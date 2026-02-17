@@ -1,7 +1,12 @@
 from django.db import models
-import uuid, random
-from django.db.utils import IntegrityError
+import uuid, random, bleach
+from django.utils.text import slugify
+
+# from django.db.utils import IntegrityError
 from django_ckeditor_5.fields import CKEditor5Field
+from django.utils import timezone
+
+from magazine.slug import generate_unique_slug
 
 # Create your models here.
 
@@ -32,19 +37,83 @@ class Magazine(models.Model):
         verbose_name = "Magazine"
         verbose_name_plural = "Magazine"
 
+    def __str__(self):
+        if len(self.title) > 50:
+            return f"{self.title[:50]}..."
+        return self.title
+
     """
     Generate a unique ID for the Department with increased randomness and collision handling.
     """
 
     def __generate_id(self):
+        print("Generating ID...................................................dsagasf")
         new_id = f"MAG{uuid.uuid4().hex[:8].upper()}{random.randint(100, 999)}"
         while True:
             try:
                 Magazine.objects.get(id=new_id)
-            except IntegrityError:
+            except Magazine.DoesNotExist:
                 return new_id
+
+    def change_issued_at(self):
+        if self.is_published:
+            self.issued_at = timezone.now().date()
+        if not self.is_published and self.issued_at is not None:
+            self.issued_at = None
+
+    def clean(self):
+        self.title = bleach.clean(
+            self.title,
+            strip=True,
+            strip_comments=True,
+            # strip_tags=True,
+            # strip_scripts=True,
+            # strip_style=True,
+        )
+        self.description = bleach.clean(
+            self.description,
+            strip=True,
+            strip_comments=True,
+            # strip_tags=True,
+            # strip_scripts=True,
+            # strip_style=True,
+        )
+        self.content = bleach.clean(
+            self.content,
+            strip=True,
+            strip_comments=True,
+            # strip_scripts=True,
+            tags=[
+                "p",
+                "br",
+                "b",
+                "i",
+                "u",
+                "em",
+                "strong",
+                "ul",
+                "ol",
+                "li",
+                "a",
+                "img",
+                "h1",
+                "h2",
+                "h3",
+            ],
+            attributes={
+                "img": ["src", "alt", "width", "height"],
+            }
+        )
+        return super().clean()
 
     def save(self, *args, **kwargs):
         if not self.id:
             self.id = self.__generate_id()
+        if not self.slug:
+            if len(self.title) > 50:
+                self.slug = generate_unique_slug(self, self.title[:50] , transliterate=True)
+            # Choose transliteration or Unicode depending on your use case
+            self.slug = generate_unique_slug(self, self.title , transliterate=True)
+
+        self.change_issued_at()
         super(Magazine, self).save(*args, **kwargs)

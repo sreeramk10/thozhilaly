@@ -22,7 +22,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    'django_daisy', # on top of default django admin 
     'django.contrib.admin',
+    'django.contrib.humanize',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -100,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Se'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -117,3 +119,71 @@ MEDIA_ROOT = BASE_DIR/'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DAISY_SETTINGS = {
+    'DEFAULT_THEME': 'corporate',  # Always use this theme
+    'SHOW_THEME_SELECTOR': False,  # Hide selector
+}
+
+BLEACH_DEFAULT_WIDGET = 'django_ckeditor_5.widgets.CKEditor5Widget'   
+
+BLEACH_ALLOWED_TAGS = [
+    'p', 'br', 'b', 'i', 'u', 'em', 'strong', 'ul', 'ol', 'li', 'a', 'img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+]
+
+BLEACH_ALLOWED_ATTRIBUTES = {
+    # 'a': ['href', 'rel'],
+    'img': ['src', 'alt', 'width', 'height']
+}
+
+CKEDITOR_5_CONFIGS = {
+    'extends': {
+        'blockToolbar': [
+            'paragraph', 'heading1', 'heading2', 'heading3',
+            '|',
+            'bulletedList', 'numberedList',
+            '|',
+            'blockQuote',
+        ],
+        'toolbar': {
+            'items': ['heading', '|', 'outdent', 'indent', '|', 'bold', 'italic', 'link', 'underline', 'strikethrough',
+                    'subscript', 'superscript', 'highlight', '|',   'insertImage',
+                    'bulletedList', 'numberedList', '|',  'blockQuote',  '|',
+                    'fontSize', 'fontFamily', 'removeFormat',
+                    'insertTable','|', 'ImageToolbar', 'ImageCaption'
+                    ],
+            'shouldNotGroupWhenFull': 'true'
+        },
+        'image': {
+            'toolbar': ['imageTextAlternative', '|', 'imageStyle:alignLeft',
+                        'imageStyle:alignRight', 'imageStyle:alignCenter', 'imageStyle:side',  '|'],
+            'styles': [
+                'full',
+                'side',
+                'alignLeft',
+                'alignRight',
+                'alignCenter',
+            ]
+
+        },
+        'table': {
+            'contentToolbar': [ 'tableColumn', 'tableRow', 'mergeTableCells',
+            'tableProperties', 'tableCellProperties' ],
+        },
+        'heading' : {
+            'options': [
+                { 'model': 'paragraph', 'title': 'Paragraph', 'class': 'ck-heading_paragraph' },
+                { 'model': 'heading1', 'view': 'h1', 'title': 'Heading 1', 'class': 'ck-heading_heading1' },
+                { 'model': 'heading2', 'view': 'h2', 'title': 'Heading 2', 'class': 'ck-heading_heading2' },
+                { 'model': 'heading3', 'view': 'h3', 'title': 'Heading 3', 'class': 'ck-heading_heading3' }
+            ]
+        }
+    },
+    'list': {
+        'properties': {
+            'styles': 'true',
+            'startIndex': 'true',
+            'reversed': 'true',
+        }
+    }
+}
