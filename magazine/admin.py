@@ -33,19 +33,53 @@ class MagazineAdmin(admin.ModelAdmin):
     def make_unpublished(self, request, queryset):
         queryset.update(is_published=False)
         queryset.update(issued_at=None)
+
+    def make_featured(self, request, queryset):
+        """Set selected magazine as featured"""
+        Magazine.objects.filter(is_featured=True).update(is_featured=False)  # Unset all
+        queryset.update(is_featured=True)
+        self.message_user(request, "Selected magazine set as featured")
+
+    def remove_featured(self, request, queryset):
+        """Remove featured status"""
+        queryset.update(is_featured=False)
+    
+    make_featured.short_description = "Set as Featured"
+    remove_featured.short_description = "Remove Featured Status"
+
     list_display_links = ["shortern_title"]
     list_display = ["shortern_title", "is_published", "created_at", "issued_at"]
     search_fields = ["title"]
-    actions = ["make_published", "make_unpublished"]
+    actions = ["make_published", "make_unpublished", "make_featured", "remove_featured"]
     list_filter = ["is_published", "created_at", "issued_at",]
     readonly_fields = ["created_at", "issued_at",'slug', "image_preview"]
     list_per_page = 10
+
+
     fieldsets = (
         (
-            None,
+            "Content",
             {
-                "fields": ("title", "image_preview",  "cover_image","description", "content"),
+                "fields": ("title", "image_preview", "cover_image", "description", "content"),
             },
         ),
-        ("Publish the content", {"fields": ("is_published", "issued_at")}),
+        (
+            "PDF & Details", 
+            {
+                "fields": ("pdf", "page_count")
+            }
+        ),
+        (
+            "Publishing Options", 
+            {
+                "fields": ("is_published", "is_featured", "issued_at")
+            }
+        ),
+        (
+            "Meta", 
+            {
+                "fields": ("slug", "created_at"),
+                "classes": ("collapse",)
+            }
+        ),
     )

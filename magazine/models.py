@@ -1,15 +1,10 @@
 from django.db import models
 import uuid, random, bleach
 from django.utils.text import slugify
-
-# from django.db.utils import IntegrityError
 from django_ckeditor_5.fields import CKEditor5Field
 from django.utils import timezone
-
 from magazine.slug import generate_unique_slug
-
 # Create your models here.
-
 
 class Magazine(models.Model):
     id = models.CharField(max_length=20, primary_key=True, editable=False)
@@ -23,6 +18,7 @@ class Magazine(models.Model):
     description = models.TextField(verbose_name="Description")
     content = CKEditor5Field("Content", config_name="extends")
     is_published = models.BooleanField(default=False, verbose_name="Is Published")
+    is_featured = models.BooleanField(default=False, verbose_name="Featured on Homepage")
     created_at = models.DateTimeField(auto_now_add=True)
     issued_at = models.DateField(null=True, blank=True, verbose_name="Issued At")
     pdf = models.FileField(
@@ -32,10 +28,12 @@ class Magazine(models.Model):
     slug = models.SlugField(
         max_length=200, unique=True, null=True, blank=True, verbose_name="Slug"
     )
+    view_count = models.PositiveIntegerField(default=0, verbose_name="View Count") 
 
     class Meta:
         verbose_name = "Magazine"
         verbose_name_plural = "Magazine"
+        ordering = ['-issued_at', '-created_at']
 
     def __str__(self):
         if len(self.title) > 50:
@@ -60,6 +58,10 @@ class Magazine(models.Model):
             self.issued_at = timezone.now().date()
         if not self.is_published and self.issued_at is not None:
             self.issued_at = None
+
+    def increment_view_count(self):
+        self.view_count += 1
+        self.save(update_fields=['view_count'])
 
     def clean(self):
         self.title = bleach.clean(
@@ -117,3 +119,18 @@ class Magazine(models.Model):
 
         self.change_issued_at()
         super(Magazine, self).save(*args, **kwargs)
+
+class SiteVisit(models.Model):
+    visited_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Site Visit"
+        verbose_name_plural = "Site Visits"
+        ordering = ['-visited_at']
+
+    @classmethod
+    def get_total_visits(cls):
+        return cls.objects.count()
+
+    def __str__(self):
+        return f"Visit at {self.visited_at}"

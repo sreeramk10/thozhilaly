@@ -1,634 +1,262 @@
+{% extends 'base.html' %}
 {% load static %}
-<!doctype html>
-<html lang="ml">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Indian Thozhilali — Labor Magazine</title>
-    <meta
-      name="description"
-      content="Kerala's premier labor magazine since 1950. In-depth reporting on workers' rights, union activities, and labor laws. Official publication of INTUC Kerala."
-    />
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Indian Thozhilali — Labor Magazine" />
-    <meta
-      property="og:description"
-      content="Kerala's premier labor magazine. Workers' rights, union activities, and labor law coverage since 1950."
-    />
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&h=630&fit=crop&q=80"
-    />
+{% block title %}ഇന്ത്യൻ തൊഴിലാളി — Indian Thozhilali{% endblock %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Malayalam:wght@300;400;500;600;700&family=Noto+Serif+Malayalam:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
-      rel="stylesheet"
-    />
+{% block content %}
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-  </head>
+<!-- Hero -->
+<header class="hero">
+  <div class="hero__background">
+    <img src="{% static 'assets/white.jpg' %}" alt="തൊഴിലാളി ഐക്യദാർഢ്യം" class="hero__bg-image" width="1920"
+      height="1080">
+    <div class="hero__overlay"></div>
+  </div>
 
-  <body>
-    <!-- Loader -->
-    <div class="loader" id="loader" aria-hidden="true">
-      <div class="loader__inner">
-        <div class="loader__bar"></div>
-        <span class="loader__text">Indian Thozhilali</span>
+  <!-- Left flag -->
+  <div class="hero__flag hero__flag--left"></div>
+  <!-- Right flag -->
+  <div class="hero__flag hero__flag--right"></div>
+
+  <div class="hero__container">
+    <div class="hero__content">
+      <div class="hero__masthead">
+        <!-- Logo -->
+        <div class="hero__logo-wrap">
+          <img src="{% static 'assets/logoo.png' %}" alt="Indian Thozhilali Logo" class="hero__logo" width="96"
+            height="96" loading="eager">
+        </div>
+        <!-- Title -->
+        <h1 class="hero__title hero__title--masthead">
+          <span class="hero__title-line hero__title-line--indian">ഇന്ത്യൻ</span>
+          <span class="hero__title-line hero__title-line--thozhilali">തൊഴിലാളി</span>
+        </h1>
       </div>
-    </div>
-
-    <!-- Custom Cursor (desktop only) -->
-    {% comment %} <div class="cursor" aria-hidden="true">
-      <div class="cursor__dot"></div>
-      <div class="cursor__circle"></div>
-    </div> {% endcomment %}
-
-    <!-- Navigation -->
-    <nav class="nav" id="nav" role="navigation" aria-label="Primary navigation">
-      <div class="nav__wrapper">
-        <a href="#" class="nav__logo">
-          <span class="nav__logo-ml" id="logoText">തൊഴിലാളി</span>
-          <span class="nav__logo-en">Indian Thozhilali</span>
+      <!-- Subtitle -->
+      <p class="hero__subtitle">അധ്വാന വർഗ്ഗത്തിന്റെ അഖിലേന്ത്യാ മാസിക</p>
+      <!-- CTA -->
+      <div class="hero__cta">
+        <a href="#stories" class="btn-primary">
+          <span class="btn-primary__text">വായിക്കുക</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
         </a>
+      </div>
 
-        <div class="nav__links">
-          <a href="#stories" class="nav__link">Stories</a>
-          <a href="#magazine" class="nav__link">Magazine</a>
-          <a href="#archive" class="nav__link">Archive</a>
-          <a href="#about" class="nav__link">About</a>
+    </div>
+  </div>
+</header>
+
+
+<!-- Featured Section -->
+<section class="featured" id="magazine">
+  <div class="featured__wrapper">
+    <div class="featured__header">
+      <span class="section-label" data-reveal>ഏറ്റവും പുതിയ ലക്കം</span>
+    </div>
+
+    {% if featured_magazine %}
+    <div class="featured__content">
+      <div class="featured__image" data-reveal-image>
+        <div class="magazine-cover">
+          <img src="{{ featured_magazine.cover_image.url }}" alt="{{ featured_magazine.title }}" loading="lazy"
+            width="600" height="850">
+          <div class="magazine-cover__badge">{{ featured_magazine.issued_at|date:"M y" }}</div>
+        </div>
+      </div>
+
+      <div class="featured__text">
+        <h2 class="featured__title">{{ featured_magazine.issued_at|date:"F Y" }}<br>മാസിക</h2>
+        <p class="featured__description">{{ featured_magazine.description|truncatewords:30 }}</p>
+
+        <div class="featured__meta">
+          {% if featured_magazine.pdf %}
+          <div class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <span>PDF</span>
+          </div>
+          {% endif %}
+          {% if featured_magazine.page_count %}
+          <div class="meta-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              aria-hidden="true">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+            <span>{{ featured_magazine.page_count }} പേജുകൾ</span>
+          </div>
+          {% endif %}
         </div>
 
-        <button
-          class="nav__menu-btn"
-          id="menuBtn"
-          aria-label="Toggle navigation menu"
-          aria-expanded="false"
-          aria-controls="menuOverlay"
-        >
-          <span class="nav__menu-text">Menu</span>
-          <div class="nav__menu-icon" aria-hidden="true">
-            <span></span>
-            <span></span>
-          </div>
-        </button>
-      </div>
-    </nav>
-
-    <!-- Fullscreen Menu Overlay -->
-    <div class="menu-overlay" id="menuOverlay" role="dialog" aria-modal="true" aria-label="Navigation menu">
-      <div class="menu-overlay__bg"></div>
-      <div class="menu-overlay__content">
-        <nav class="menu-nav" role="navigation" aria-label="Full screen navigation">
-          <a href="#" class="menu-nav__link" data-menu-link>
-            <span class="menu-nav__number">01</span>
-            <span class="menu-nav__text">Home</span>
+        <div class="featured__actions" data-reveal>
+          {% if featured_magazine.pdf %}
+          <a href="{{ featured_magazine.pdf.url }}" class="btn-primary" download>
+            <span class="btn-primary__text">ഡൗൺലോഡ് ചെയ്യുക</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
           </a>
-          <a href="#stories" class="menu-nav__link" data-menu-link>
-            <span class="menu-nav__number">02</span>
-            <span class="menu-nav__text">Stories</span>
+          {% endif %}
+          <a href="{% url 'magazine_detail' featured_magazine.slug %}" class="btn-text">
+            <span>ഓൺലൈനായി വായിക്കുക</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
           </a>
-          <a href="#magazine" class="menu-nav__link" data-menu-link>
-            <span class="menu-nav__number">03</span>
-            <span class="menu-nav__text">Magazine</span>
-          </a>
-          <a href="#archive" class="menu-nav__link" data-menu-link>
-            <span class="menu-nav__number">04</span>
-            <span class="menu-nav__text">Archive</span>
-          </a>
-          <a href="#about" class="menu-nav__link" data-menu-link>
-            <span class="menu-nav__number">05</span>
-            <span class="menu-nav__text">About</span>
-          </a>
-        </nav>
-
-        <div class="menu-overlay__info">
-          <div class="menu-info">
-            <div class="menu-info__col">
-              <span class="menu-info__label">Contact</span>
-              <a href="tel:+914842326555" class="menu-info__link">+91 484 232 6555</a>
-              <a href="mailto:info@intuc.org" class="menu-info__link">info@intuc.org</a>
-            </div>
-
-            <div class="menu-info__col">
-              <span class="menu-info__label">Follow</span>
-              <a href="#" class="menu-info__link">Facebook</a>
-              <a href="#" class="menu-info__link">Twitter</a>
-              <a href="#" class="menu-info__link">YouTube</a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
+    {% else %}
+    <div class="featured__content">
+      <p style="text-align: center; color: var(--ink-muted); padding: 60px 20px;">ഫീച്ചർ ചെയ്ത മാസിക ലഭ്യമല്ല. ദയവായി
+        അഡ്മിൻ പാനലിൽ നിന്ന് ഒരു മാസിക പ്രസിദ്ധീകരിക്കുക.</p>
+    </div>
+    {% endif %}
+  </div>
+</section>
 
-    <main id="main-content">
-      <!-- Hero -->
-      <!-- Hero -->
-      <header class="hero">
-        <div class="hero__container">
-          <!-- Left: Logo & Text -->
-          <div class="hero__content">
-            <h1 class="hero__title">
-              <span class="hero__title-line">ഇന്ത്യൻ</span>
-              <span class="hero__title-line">തൊഴിലാളി</span>
-            </h1>
+<!-- Stories Grid -->
+<section class="stories" id="stories">
+  <div class="stories__wrapper">
+    <div class="stories__header">
+      <span class="section-label" data-reveal>ഏറ്റവും പുതിയ വാർത്തകൾ</span>
+      <h2 class="section-title" data-reveal>സമീപകാല ലേഖനങ്ങൾ</h2>
+    </div>
 
-            <p class="hero__subtitle">അധ്വാന വർഗ്ഗത്തിന്റെ അഖിലേന്ത്യാ മാസിക</p>
-
-            <div class="hero__meta">
-              <span>ലക്കം 1</span>
-              <span class="hero__meta-divider">·</span>
-              <span>ഫെബ്രുവരി 15, 2026</span>
-            </div>
-
-            <div class="hero__cta">
-              <a href="#stories" class="btn-primary">
-                <span class="btn-primary__text">വായിക്കുക</span>
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  aria-hidden="true"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </a>
+    {% if recent_magazines %}
+    <div class="stories__grid">
+      {% for magazine in recent_magazines %}
+      <article class="story-card {% if forloop.first %}story-card--featured{% endif %}">
+        <a href="{% url 'magazine_detail' magazine.slug %}" class="story-card__link">
+          <div class="story-card__media">
+            <div class="story-card__image" data-reveal-image>
+              <img src="{{ magazine.cover_image.url }}" alt="{{ magazine.title }}" loading="lazy" width="800"
+                height="600">
             </div>
           </div>
-
-          <!-- Right: Banner Placeholder -->
-          <div class="hero__banner">
-            <div class="hero__banner-placeholder">
-              <!-- Your banner image goes here -->
-              <img src="assets/logo.png" alt="Magazine Banner" />
+          <div class="story-card__content">
+            <time class="story-card__date" datetime="{{ magazine.issued_at|date:'Y-m-d' }}">
+              {{ magazine.issued_at|date:"F d, Y" }}
+            </time>
+            <h3 class="story-card__title">{{ magazine.title }}</h3>
+            <p class="story-card__excerpt">{{ magazine.description|truncatewords:20 }}</p>
+            {% if forloop.first %}
+            <div class="story-card__meta">
+              <span class="story-card__read">6 മിനിറ്റ് വായന</span>
+              <span class="story-card__arrow" aria-hidden="true">→</span>
             </div>
+            {% else %}
+            <span class="story-card__read">4 മിനിറ്റ്</span>
+            {% endif %}
           </div>
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="text-align: center; color: var(--ink-muted); padding: 40px 20px;">ഇതുവരെ വാർത്തകൾ ലഭ്യമല്ല.</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Archive -->
+<section class="archive" id="archive">
+  <div class="archive__wrapper">
+    <div class="archive__header">
+      <span class="section-label" data-reveal>ആർക്കൈവ്</span>
+      <h2 class="section-title" data-reveal>കഴിഞ്ഞ ലക്കങ്ങൾ</h2>
+    </div>
+
+    {% if archive_magazines %}
+    <div class="archive__grid">
+      {% for magazine in archive_magazines %}
+      <div class="archive-item">
+        <div class="archive-item__cover" data-reveal-image>
+          <img src="{{ magazine.cover_image.url }}" alt="{{ magazine.title }}" loading="lazy" width="500" height="700">
+          <div class="archive-item__overlay">
+            {% if magazine.pdf %}
+            <a href="{{ magazine.pdf.url }}" class="archive-item__download"
+              aria-label="ഡൗൺലോഡ് ചെയ്യുക {{ magazine.title }}" download>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </a>
+            {% endif %}
+          </div>
+          <div class="archive-item__badge">{{ magazine.issued_at|date:"M y" }}</div>
         </div>
-      </header>
-
-      <!-- Featured Section -->
-      <section class="featured" id="magazine">
-        <div class="featured__wrapper">
-          <div class="featured__header">
-            <span class="section-label" data-reveal>Latest Issue</span>
-          </div>
-
-          <div class="featured__content">
-            <div class="featured__image" data-reveal-image>
-              <div class="magazine-cover">
-                <img
-                  src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&h=850&fit=crop&q=90"
-                  alt="February 2026 Indian Thozhilali magazine cover"
-                  loading="lazy"
-                />
-                <div class="magazine-cover__badge">Feb 26</div>
-              </div>
-            </div>
-
-            <div class="featured__text">
-              <h2 class="featured__title">February 2026<br />Magazine</h2>
-              <p class="featured__description">
-                Complete coverage of labor rights, union activities, and workers' welfare across Kerala. 48 pages of
-                in-depth reporting and analysis.
-              </p>
-
-              <div class="featured__meta">
-                <div class="meta-item">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    aria-hidden="true"
-                  >
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                    <polyline points="14 2 14 8 20 8"></polyline>
-                  </svg>
-                  <span>PDF</span>
-                </div>
-                <div class="meta-item">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    aria-hidden="true"
-                  >
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                  </svg>
-                  <span>48 Pages</span>
-                </div>
-              </div>
-
-              <div class="featured__actions" data-reveal>
-                <a href="#" class="btn-primary">
-                  <span class="btn-primary__text">Download</span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    aria-hidden="true"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>
-                </a>
-                <a href="#stories" class="btn-text">
-                  <span>Read Online</span>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="1.5"
-                    aria-hidden="true"
-                  >
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                    <polyline points="12 5 19 12 12 19"></polyline>
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Stories Grid -->
-      <section class="stories" id="stories">
-        <div class="stories__wrapper">
-          <div class="stories__header">
-            <span class="section-label" data-reveal>Latest Stories</span>
-            <h2 class="section-title" data-reveal>Recent Articles</h2>
-          </div>
-
-          <div class="stories__grid">
-            <!-- Featured Story -->
-            <article class="story-card story-card--featured">
-              <a href="#" class="story-card__link">
-                <div class="story-card__media">
-                  <div class="story-card__image" data-reveal-image>
-                    <img
-                      src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1400&h=900&fit=crop&q=90"
-                      alt="Group of workers discussing labor welfare plans"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <div class="story-card__content">
-                  <time class="story-card__date" datetime="2026-02-12">February 12, 2026</time>
-                  <h3 class="story-card__title">തൊഴിലാളി ക്ഷേമ പദ്ധതികൾ: പുതിയ സാധ്യതകൾ</h3>
-                  <p class="story-card__excerpt">
-                    സംസ്ഥാന സർക്കാർ തൊഴിലാളികൾക്കായി പുതിയ ക്ഷേമ പദ്ധതികൾ പ്രഖ്യാപിച്ചു. ആരോഗ്യ ഇൻഷുറൻസ്, പെൻഷൻ
-                    സൗകര്യങ്ങൾ, വിദ്യാഭ്യാസ സഹായം എന്നിവ ഉൾപ്പെടുന്നു.
-                  </p>
-                  <div class="story-card__meta">
-                    <span class="story-card__read">6 min read</span>
-                    <span class="story-card__arrow" aria-hidden="true">→</span>
-                  </div>
-                </div>
-              </a>
-            </article>
-
-            <!-- Regular Stories -->
-            <article class="story-card">
-              <a href="#" class="story-card__link">
-                <div class="story-card__media">
-                  <div class="story-card__image" data-reveal-image>
-                    <img
-                      src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop&q=90"
-                      alt="Person reviewing wage documents at a desk"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <div class="story-card__content">
-                  <time class="story-card__date" datetime="2026-02-11">February 11, 2026</time>
-                  <h3 class="story-card__title">മിനിമം വേതനം വർധിപ്പിച്ചു</h3>
-                  <p class="story-card__excerpt">സംസ്ഥാന തൊഴിലാളികളുടെ മിനിമം വേതനം 15% വർധിപ്പിച്ചു.</p>
-                  <span class="story-card__read">4 min</span>
-                </div>
-              </a>
-            </article>
-
-            <article class="story-card">
-              <a href="#" class="story-card__link">
-                <div class="story-card__media">
-                  <div class="story-card__image" data-reveal-image>
-                    <img
-                      src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&h=600&fit=crop&q=90"
-                      alt="Workers shaking hands at a union meeting"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <div class="story-card__content">
-                  <time class="story-card__date" datetime="2026-02-10">February 10, 2026</time>
-                  <h3 class="story-card__title">യൂണിയൻ അംഗത്വം വർധിച്ചു</h3>
-                  <p class="story-card__excerpt">കേരളത്തിൽ തൊഴിലാളി യൂണിയനുകളുടെ അംഗത്വം റെക്കോർഡ് നിലയിൽ.</p>
-                  <span class="story-card__read">5 min</span>
-                </div>
-              </a>
-            </article>
-
-            <article class="story-card">
-              <a href="#" class="story-card__link">
-                <div class="story-card__media">
-                  <div class="story-card__image" data-reveal-image>
-                    <img
-                      src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop&q=90"
-                      alt="Professional woman working in an office environment"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <div class="story-card__content">
-                  <time class="story-card__date" datetime="2026-02-09">February 9, 2026</time>
-                  <h3 class="story-card__title">വനിതാ തൊഴിലാളികൾക്ക് സംരക്ഷണം</h3>
-                  <p class="story-card__excerpt">തൊഴിൽ സ്ഥലങ്ങളിൽ സുരക്ഷാ നടപടികൾ കർശനമാക്കി.</p>
-                  <span class="story-card__read">4 min</span>
-                </div>
-              </a>
-            </article>
-
-            <article class="story-card">
-              <a href="#" class="story-card__link">
-                <div class="story-card__media">
-                  <div class="story-card__image" data-reveal-image>
-                    <img
-                      src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=600&fit=crop&q=90"
-                      alt="Modern workplace with safety equipment"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <div class="story-card__content">
-                  <time class="story-card__date" datetime="2026-02-08">February 8, 2026</time>
-                  <h3 class="story-card__title">തൊഴിൽ സുരക്ഷാ മാനദണ്ഡങ്ങൾ</h3>
-                  <p class="story-card__excerpt">പുതിയ സുരക്ഷാ മാനദണ്ഡങ്ങൾ നിർബന്ധമാക്കി.</p>
-                  <span class="story-card__read">3 min</span>
-                </div>
-              </a>
-            </article>
-
-            <article class="story-card">
-              <a href="#" class="story-card__link">
-                <div class="story-card__media">
-                  <div class="story-card__image" data-reveal-image>
-                    <img
-                      src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&h=600&fit=crop&q=90"
-                      alt="Documents and pen on a desk for pension review"
-                      loading="lazy"
-                    />
-                  </div>
-                </div>
-                <div class="story-card__content">
-                  <time class="story-card__date" datetime="2026-02-07">February 7, 2026</time>
-                  <h3 class="story-card__title">പെൻഷൻ പദ്ധതി പരിഷ്കരണം</h3>
-                  <p class="story-card__excerpt">തൊഴിലാളികൾക്കുള്ള പെൻഷൻ തുക വർധിപ്പിച്ചു.</p>
-                  <span class="story-card__read">5 min</span>
-                </div>
-              </a>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- Archive -->
-      <section class="archive" id="archive">
-        <div class="archive__wrapper">
-          <div class="archive__header">
-            <span class="section-label" data-reveal>Archive</span>
-            <h2 class="section-title" data-reveal>Past Issues</h2>
-          </div>
-
-          <div class="archive__grid">
-            <div class="archive-item">
-              <div class="archive-item__cover" data-reveal-image>
-                <img
-                  src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=500&h=700&fit=crop&q=90"
-                  alt="January 2026 New Year Special issue cover"
-                  loading="lazy"
-                />
-                <div class="archive-item__overlay">
-                  <a href="#" class="archive-item__download" aria-label="Download January 2026 issue">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      aria-hidden="true"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                  </a>
-                </div>
-                <div class="archive-item__badge">Jan 26</div>
-              </div>
-              <div class="archive-item__info">
-                <h3>January 2026</h3>
-                <p>New Year Special</p>
-              </div>
-            </div>
-
-            <div class="archive-item">
-              <div class="archive-item__cover" data-reveal-image>
-                <img
-                  src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=500&h=700&fit=crop&q=90"
-                  alt="December 2025 Year Review issue cover"
-                  loading="lazy"
-                />
-                <div class="archive-item__overlay">
-                  <a href="#" class="archive-item__download" aria-label="Download December 2025 issue">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      aria-hidden="true"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                  </a>
-                </div>
-                <div class="archive-item__badge">Dec 25</div>
-              </div>
-              <div class="archive-item__info">
-                <h3>December 2025</h3>
-                <p>Year Review</p>
-              </div>
-            </div>
-
-            <div class="archive-item">
-              <div class="archive-item__cover" data-reveal-image>
-                <img
-                  src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=500&h=700&fit=crop&q=90"
-                  alt="November 2025 Rights Special issue cover"
-                  loading="lazy"
-                />
-                <div class="archive-item__overlay">
-                  <a href="#" class="archive-item__download" aria-label="Download November 2025 issue">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      aria-hidden="true"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                  </a>
-                </div>
-                <div class="archive-item__badge">Nov 25</div>
-              </div>
-              <div class="archive-item__info">
-                <h3>November 2025</h3>
-                <p>Rights Special</p>
-              </div>
-            </div>
-
-            <div class="archive-item">
-              <div class="archive-item__cover" data-reveal-image>
-                <img
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=700&fit=crop&q=90"
-                  alt="October 2025 Union Solidarity issue cover"
-                  loading="lazy"
-                />
-                <div class="archive-item__overlay">
-                  <a href="#" class="archive-item__download" aria-label="Download October 2025 issue">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      aria-hidden="true"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="7 10 12 15 17 10"></polyline>
-                      <line x1="12" y1="15" x2="12" y2="3"></line>
-                    </svg>
-                  </a>
-                </div>
-                <div class="archive-item__badge">Oct 25</div>
-              </div>
-              <div class="archive-item__info">
-                <h3>October 2025</h3>
-                <p>Union Solidarity</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- About -->
-      <section class="about" id="about">
-        <div class="about__wrapper">
-          <div class="about__content">
-            <span class="section-label" data-reveal>About</span>
-            <h2 class="section-title" data-reveal>Indian Thozhilali</h2>
-            <div class="about__text" data-reveal>
-              <p>
-                കേരളത്തിലെ പ്രമുഖ തൊഴിലാളി മാസിക. 1950 മുതൽ തൊഴിലാളികളുടെ അവകാശങ്ങൾ, യൂണിയൻ പ്രവർത്തനങ്ങൾ, തൊഴിൽ
-                നിയമങ്ങൾ എന്നിവയെക്കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ നൽകുന്നു.
-              </p>
-              <p>ഇന്ത്യൻ നാഷണൽ ട്രേഡ് യൂണിയൻ കോൺഗ്രസിന്റെ (INTUC) കേരള ശാഖയുടെ ഔദ്യോഗിക പ്രസിദ്ധീകരണം.</p>
-            </div>
-
-            <div class="about__stats">
-              <div class="stat-item" data-reveal>
-                <span class="stat-item__number" data-count="75">0</span>
-                <span class="stat-item__suffix">+</span>
-                <span class="stat-item__label">Years Publishing</span>
-              </div>
-              <div class="stat-item" data-reveal>
-                <span class="stat-item__number" data-count="50">0</span>
-                <span class="stat-item__suffix">K+</span>
-                <span class="stat-item__label">Monthly Readers</span>
-              </div>
-              <div class="stat-item" data-reveal>
-                <span class="stat-item__number" data-count="900">0</span>
-                <span class="stat-item__suffix">+</span>
-                <span class="stat-item__label">Issues Published</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer" role="contentinfo">
-      <div class="footer__wrapper">
-        <div class="footer__main">
-          <div class="footer__brand">
-            <h3>തൊഴിലാളി</h3>
-            <p>Indian National Trade Union Congress<br />Kerala Branch</p>
-          </div>
-
-          <div class="footer__links">
-            <div class="footer__col">
-              <h4>Magazine</h4>
-              <a href="#">Latest Issue</a>
-              <a href="#">Archive</a>
-              <a href="#">Subscribe</a>
-            </div>
-
-            <div class="footer__col">
-              <h4>About</h4>
-              <a href="#">Our Story</a>
-              <a href="#">Team</a>
-              <a href="#">Contact</a>
-            </div>
-
-            <div class="footer__col">
-              <h4>Connect</h4>
-              <a href="#">Facebook</a>
-              <a href="#">Twitter</a>
-              <a href="#">YouTube</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="footer__bottom">
-          <p>&copy; 2026 Indian Thozhilali. All rights reserved.</p>
-          <p>Empowering workers since 1950</p>
+        <div class="archive-item__info">
+          <h3>{{ magazine.issued_at|date:"F Y" }}</h3>
+          <p>{{ magazine.title|truncatewords:3 }}</p>
         </div>
       </div>
-    </footer>
+      {% endfor %}
+    </div>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="{% static 'js/main.js' %}"></script>
-  </body>
-</html>
+    <!-- View More Button -->
+    <div style="text-align: center; margin-top: 48px;">
+      <a href="{% url 'archive_list' %}" class="btn-primary">
+        <span class="btn-primary__text">എല്ലാ ആർക്കൈവുകളും കാണുക</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </div>
+    {% else %}
+    <p style="text-align: center; color: var(--ink-muted); padding: 40px 20px;">കൂടുതൽ ലക്കങ്ങൾ പ്രസിദ്ധീകരിക്കുമ്പോൾ
+      ആർക്കൈവ് പൂരിപ്പിക്കും.</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="about__wrapper">
+    <div class="about__content">
+      <span class="section-label" data-reveal>നമ്മളെക്കുറിച്ച്</span>
+      <h2 class="section-title" data-reveal>ഇന്ത്യൻ തൊഴിലാളി</h2>
+      <div class="about__text" data-reveal>
+        <p>കേരളത്തിലെ പ്രമുഖ തൊഴിലാളി മാസിക. 1950 മുതൽ തൊഴിലാളികളുടെ അവകാശങ്ങൾ, യൂണിയൻ പ്രവർത്തനങ്ങൾ,
+          തൊഴിൽ നിയമങ്ങൾ എന്നിവയെക്കുറിച്ചുള്ള വിശദമായ വിവരങ്ങൾ നൽകുന്നു.</p>
+        <p>ഇന്ത്യൻ നാഷണൽ ട്രേഡ് യൂണിയൻ കോൺഗ്രസിന്റെ (INTUC) കേരള ശാഖയുടെ ഔദ്യോഗിക പ്രസിദ്ധീകരണം.</p>
+      </div>
+
+      <div class="about__stats">
+        <div class="stat-item" data-reveal>
+          <span class="stat-item__number" data-count="75">0</span>
+          <span class="stat-item__suffix">+</span>
+          <span class="stat-item__label">വർഷങ്ങൾ പ്രസിദ്ധീകരണം</span>
+        </div>
+        <div class="stat-item" data-reveal>
+          <span class="stat-item__number" data-count="50">0</span>
+          <span class="stat-item__suffix">K+</span>
+          <span class="stat-item__label">പ്രതിമാസ വായനക്കാർ</span>
+        </div>
+        <div class="stat-item" data-reveal>
+          <span class="stat-item__number" data-count="900">0</span>
+          <span class="stat-item__suffix">+</span>
+          <span class="stat-item__label">പ്രസിദ്ധീകരിച്ച ലക്കങ്ങൾ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
