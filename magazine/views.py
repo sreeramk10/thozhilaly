@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from magazine.models import Magazine, SiteVisit
+from django.http import FileResponse, Http404
+import os
 
 
 def get_page_range(paginator, current_page, delta=2):
@@ -109,6 +111,19 @@ def archive(request):
         ).dates('issued_at', 'year').count(),
     }
     return render(request, 'archive.html', context)
+
+def download_pdf(request, slug):
+    magazine = get_object_or_404(Magazine, slug=slug, is_published=True)
+    if magazine.pdf and os.path.exists(magazine.pdf.path):
+        response = FileResponse(
+            open(magazine.pdf.path, 'rb'),
+            content_type='application/pdf'
+        )
+        response['Content-Disposition'] = (
+            f'attachment; filename="{os.path.basename(magazine.pdf.name)}"'
+        )
+        return response
+    raise Http404
 
 def developers(request):
     return render(request, "developers.html")

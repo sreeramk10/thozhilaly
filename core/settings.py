@@ -48,6 +48,8 @@ MIDDLEWARE = [
     "magazine.middleware.VisitorCountMiddleware",
 ]
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
@@ -118,7 +120,7 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Media files (to use db images)
-MEDIA_URL = "media/"
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
